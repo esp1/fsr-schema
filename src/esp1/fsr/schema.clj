@@ -56,11 +56,3 @@
    :dir-path dir-path?
    :file-path file-path?
    :file file?})
-
-(def registry
-  (merge
-   (m/comparator-schemas)
-   (m/type-schemas)
-   (m/sequence-schemas)
-   (m/base-schemas)
-   (file-schemas)))
