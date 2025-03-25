@@ -50,14 +50,17 @@
     :type-properties {:gen/gen (gen/fmap #(File. %)
                                          (mg/generator file-path?))}}))
 
+(defn file-schemas []
+  {:file-name file-name?
+   :dir-name dir-name?
+   :dir-path dir-path?
+   :file-path file-path?
+   :file file?})
+
 (def registry
   (merge
    (m/comparator-schemas)
    (m/type-schemas)
    (m/sequence-schemas)
    (m/base-schemas)
-   {:file-name file-name?
-    :dir-name dir-name?
-    :dir-path dir-path?
-    :file-path file-path?
-    :file file?}))
+   (file-schemas)))

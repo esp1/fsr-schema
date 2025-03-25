@@ -1,1 +1,5 @@
 /.clj-kondo/
+/.lsp/
+/.portal/
+
+.cpcache/
