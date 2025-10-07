@@ -50,9 +50,51 @@
     :type-properties {:gen/gen (gen/fmap #(File. %)
                                          (mg/generator file-path?))}}))
 
+;; Cache schemas
+(def cache-uri?
+  (m/-simple-schema
+   {:type :cache-uri
+    :pred (fn [s] (and (string? s) (not (str/blank? s))))
+    :type-properties {:gen/gen (gen/fmap #(str "/" (str/join "/" %))
+                                         (gen/vector gen/string-alphanumeric 1 5))}}))
+
+(def cache-key?
+  [:map
+   [:uri :string]
+   [:root-path :string]])
+
+(def cache-entry?
+  [:map
+   [:uri :string]
+   [:root-path :string]
+   [:resolved-path :string]
+   [:params :map]
+   [:timestamp [:int {:min 1}]]
+   [:metadata {:optional true} :map]])
+
+(def cache-config?
+  [:map
+   [:max-entries {:optional true :default 1000} [:int {:min 1}]]
+   [:enabled? {:optional true :default true} :boolean]
+   [:eviction-policy {:optional true :default :lru} [:enum :lru :fifo :none]]])
+
+(def cache-metrics?
+  [:map
+   [:hits [:int {:min 0}]]
+   [:misses [:int {:min 0}]]
+   [:evictions [:int {:min 0}]]
+   [:current-size [:int {:min 0}]]])
+
 (defn file-schemas []
   {:file-name file-name?
    :dir-name dir-name?
    :dir-path dir-path?
    :file-path file-path?
    :file file?})
+
+(defn cache-schemas []
+  {:cache-uri cache-uri?
+   :cache-key cache-key?
+   :cache-entry cache-entry?
+   :cache-config cache-config?
+   :cache-metrics cache-metrics?})
